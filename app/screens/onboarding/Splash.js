@@ -7,193 +7,42 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  Image
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
 
 import Images from '../../config/Images';
-import Lottie from '../../config/Lottie';
 import {colors} from '../../config/styles';
-import {getJwttoken} from '../../lib/Utils';
-import {LOGIN} from '../../actyonTypes/Common';
-import {setLanguageId} from '../../lib/Utils';
-import LocalizationHelper from '../../lib/LocalizationHelper';
+import Background from '../../components/Background';
 
-const {width} = Dimensions.get('window');
 
-let timer1;
+const {width,height} = Dimensions.get('window');
+
 const Splash = props => {
-  const [time, setTime] = useState(0);
 
-  const timeOut = () => {
-    setTimeout(() => alert('lolo'), 5000);
-  };
+    useEffect(()=>{
+        const timer = setTimeout(() => {
+                props.navigation.navigate('loginorsignup')
+        
+          }, 3000);
+      
+          return () => clearInterval(timer);
+    },[])
+ 
 
-  const tokenExists = async () => {
-    const token = await getJwttoken();
-    console.log('token1', token);
-    if (token != null) {
-      props.changeLoginStatus(true);
-      if (props.isLoggedIn) {
-       props.navigation.navigate('bottomTabs');
-      }
-    }
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTime(5);
-      tokenExists();
-    }, 1000);
-
-    return () => clearInterval(timer);
-  });
-
-  // useEffect(() => {
-  //   if (props.isLoggedIn) {
-  //     props.navigation.navigate('subjectMain');
-  //   }
-  // }, []);
-
-  const _changeLanguage = (selectedLangCode, needInit, langList) => {
-    LocalizationHelper.prototype.changeAppLanguage(
-      selectedLangCode,
-      needInit,
-      langList,
-    );
-  };
-
-  const clickNextBtn = async () => {
-    const token = await getJwttoken();
-    console.log('token1', token);
-
-    if (token != null) {
-      props.changeLoginStatus(true);
-      if (props.isLoggedIn) {
-       props.navigation.navigate('bottomTabs');
-      }
-    } else {
-      //props.navigation.navigate('languageChange'); // removed  language change page, use sinhala as default
-      setLanguageId('si');
-      _changeLanguage('si', true, false);
-      props.navigation.navigate('login');
-    }
-  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <ImageBackground
-        source={Images.Welcome}
+        source={Images.BG}
         resizeMode="cover"
         style={styles.mainComp}>
-        <View style={{flex: 1}}>
-          <LottieView source={Lottie.Welcome} autoPlay loop />
-        </View>
-
-        <View style={{padding: 30}}>
-          <View style={{paddingBottom: 70}}>
-            <Text
-              style={{
-                fontSize: 30,
-                fontWeight: 'bold',
-                color: colors.white,
-                width: width / 2,
-              }}>
-              Grow your Education & Level Up with
-            </Text>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={{fontSize: 45, fontWeight: 'bold', color: colors.white}}>
-                Apē Iscole
-              </Text>
-            </View>
-          </View>
-
-          <View style={{flexDirection: 'row', flex: 1, paddingBottom: 40}}>
-            <View style={{flexDirection: 'row', paddingTop: 20, flex: 3}}>
-              <View
-                style={{
-                  width: 50,
-                  height: 15,
-                  backgroundColor: colors.white,
-                  borderRadius: 20,
-                  margin: 5,
-                }}
-              />
-              <View
-                style={{
-                  width: 35,
-                  height: 15,
-                  backgroundColor: colors.white,
-                  borderRadius: 20,
-                  margin: 5,
-                  opacity: 0.7,
-                }}
-              />
-              <View
-                style={{
-                  width: 25,
-                  height: 15,
-                  backgroundColor: colors.white,
-                  borderRadius: 20,
-                  margin: 5,
-                  opacity: 0.5,
-                }}
-              />
-              <View
-                style={{
-                  width: 15,
-                  height: 15,
-                  backgroundColor: colors.white,
-                  borderRadius: 20,
-                  margin: 5,
-                  opacity: 0.4,
-                }}
-              />
-              <View
-                style={{
-                  width: 15,
-                  height: 15,
-                  backgroundColor: colors.white,
-                  borderRadius: 20,
-                  margin: 5,
-                  opacity: 0.3,
-                }}
-              />
-              <View
-                style={{
-                  width: 15,
-                  height: 15,
-                  backgroundColor: colors.white,
-                  borderRadius: 20,
-                  margin: 5,
-                  opacity: 0.2,
-                }}
-              />
-            </View>
-
-            <Animatable.View
-              animation="slideInDown"
-              duration={1500}
-              style={{
-                borderRadius: 10,
-                backgroundColor: colors.white,
-                width: 60,
-                height: 60,
-                justifyContent: 'center',
-                alignItems: 'center',
-                flex: 1,
-              }}>
-              <TouchableOpacity onPress={() => clickNextBtn()}>
-                <Icon
-                  name="play-outline"
-                  size={50}
-                  color={colors.primaryColor1}
-                />
-              </TouchableOpacity>
-            </Animatable.View>
-          </View>
+        <View style={{alignContent:'center',justifyContent:'center', alignItems:'center', paddingTop:60}}>
+            <Image
+            style={styles.tinyLogo}
+            source={Images.Splash}
+            />
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -207,19 +56,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     position: 'relative',
   },
+  tinyLogo: {
+    width: width/1.2,
+    height: height/2,
+  },
 });
 
 const mapStateToProps = state => {
   return {
-    isLoggedIn: state.common.isLoggedIn,
+   // isLoggedIn: state.common.isLoggedIn,
   };
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    changeLoginStatus: isLoggin => {
-      dispatch({type: LOGIN, payload: isLoggin});
-    },
+   
   };
 }
 

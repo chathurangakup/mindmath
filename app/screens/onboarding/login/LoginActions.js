@@ -2,7 +2,7 @@ import {put, takeLatest} from 'redux-saga/effects';
 
 import {GET_LOGIN, GET_LOGIN_OK} from './LoginActionTypes';
 
-import {createUrl, ajaxCall} from '../../lib/Utils';
+import {createUrl, ajaxCall} from '../../../lib/Utils';
 
 const getLogin = function* (payload) {
     console.log(  payload.payload)

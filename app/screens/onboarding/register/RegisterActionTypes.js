@@ -1,0 +1,2 @@
+export const GET_REGISTER = 'GET_REGISTER';
+export const GET_REGISTER_OK = 'GET_REGISTER_OK';

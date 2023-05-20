@@ -3,7 +3,7 @@ import {View, StyleSheet, Platform, Text} from 'react-native';
 // import {connect} from 'react-redux';
 
 
-import {Onboarding} from '../routes/NavigationStack';
+import {Onboarding, MainStack} from '../routes/NavigationStack';
 
 // import {LoadingSpinner} from '../components/LoadingSpinner';
 

@@ -2,20 +2,27 @@ import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
-  Button,
   TextInput,
   ScrollView,
   Dimensions,
   StyleSheet,
+  SafeAreaView,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 
 // import {TextInput, HelperText} from 'react-native-paper';
 
-import {colors} from '../../config/styles';
-import {AppBar} from '../../components/AppBar';
+import {colors} from '../../../config/styles';
+import {AppBar} from '../../../components/AppBar';
 import {GET_LOGIN} from './LoginActionTypes';
 import {connect} from 'react-redux';
 
+import Images from '../../../config/Images';
+import TextInputField from '../../../components/TextInputField';
+import {Button} from '../../../components/Button';
+import Background from '../../../components/Background';
 
 const {width, height} = Dimensions.get('window');
 
@@ -32,67 +39,85 @@ const Login = props => {
   };
 
   useEffect(() => {
-    console.log('loginStatus', );
-    if(props.loginStatus!=null || props.loginStatus!=undefined){
-        if(props?.loginStatus?.data?.login==true){
-          props.navigation.navigate('home')
-        }
+    console.log('loginStatus');
+    if (props.loginStatus != null || props.loginStatus != undefined) {
+      if (props?.loginStatus?.data?.login == true) {
+        props.navigation.navigate('home');
+      }
     }
-
   }, [props.loginStatus]);
 
-  const clickLoginButton = () => {
-    if(userName!='' || password!=''){
-      let params = {
-        username: userName,
-        password: password,
-      };
-      console.log(params)
-      props.getLoginStatus(params)
-    }else{
-alert('kiki')
-    }
-   
-  }
+  const clickLogin = () => {
+    props.navigation.navigate('home')
+  };
 
   return (
-    <ScrollView
-      style={{backgroundColor: '#fff'}}
-      showsHorizontalScrollIndicator={false}>
-      <AppBar
-        navigation={props.navigation}
-        title={'Awsome App'}
-        isShowBack={false}
-      />
+    <SafeAreaView style={{flex: 1}}>
+      <View style={{alignItems: 'center', width: 460}}>
+        <Background
+          source={Images.BG}
+          resizeMode="cover"
+          style={styles.mainComp}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 54,
+              fontWeight: 'bold',
+              marginVertical: 10,
+              paddingLeft: 30,
+              paddingBottom: 20,
+            }}>
+            Login
+          </Text>
+          <View
+            style={{
+              backgroundColor: 'white',
+              height: 700,
+              width: 460,
+              borderTopLeftRadius: 130,
+              paddingTop: 100,
+              paddingLeft: 60,
+            }}>
+            <Text style={{fontSize: 40, fontWeight: 'bold'}}>Welcome Back</Text>
+            <Text>Login to your account</Text>
+            <View style={{paddingTop: 30, paddingBottom: 50}}>
+              <TextInputField placeholder="Email/Username"></TextInputField>
+              <TextInputField placeholder="Password"></TextInputField>
+            </View>
+            <View style={{width: 280}}>
+              <Button
+                buttonStyle={{color: colors.primaryColor1}}
+                onPressBtn={() => clickLogin()}
+                addText={'Login'}
+              />
 
-      <View style={{paddingTop: 40, paddingBottom: 20}}>
-        <TextInput
-          style={styles.inputUserName}
-          onChangeText={setUserName}
-          value={userName}
-          placeholder="User Name"
-          keyboardType="default"
-          placeholderTextColor="#000"
-        />
-        <TextInput
-          style={styles.inputPassword}
-          onChangeText={setPassword}
-          value={password}
-          placeholder="Password"
-          keyboardType="default"
-          placeholderTextColor="#000"
-        />
-        <View style={styles.buttonStyle}>
-          <Button
-            onPress={() => clickLoginButton()}
-            title="Login"
-            color="#841584"
-
-            //  accessibilityLabel="Learn more about this purple button"
-          />
-        </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingTop: 20
+                }}>
+                <Text style={{fontSize: 16}}>Dont have an account </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    props.navigation.navigate('register');
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: colors.blackColor,
+                    }}>
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Background>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -126,6 +151,11 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
     color: '#000',
+  },
+  mainComp: {
+    paddingVertical: 40,
+    paddingHorizontal: 16,
+    position: 'relative',
   },
 });
 
