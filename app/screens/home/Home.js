@@ -1,194 +1,132 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
-  Text,
   View,
-  TouchableOpacity,
+  Text,
   ScrollView,
-  Dimensions,
   StyleSheet,
+  Dimensions,
   Image,
-  Platform,
+  FlatList,
+  TouchableOpacity
 } from 'react-native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {connect} from 'react-redux';
+
+import {AppBar} from '../../components/AppBar';
 
 import {colors} from '../../config/styles';
 import Images from '../../config/Images';
-import {AppBar} from '../../components/AppBar';
-
-
 
 const {width, height} = Dimensions.get('window');
 
+
+
+
 const Home = props => {
-  const [image, setImage] = useState('');
-  const [imagePath, setImagePath] = useState(Images.Profile);
-  const [imageFileName, setImageFileName] = useState('');
 
-  const setUser = () => {
-    setConfig();
-  };
-
-  const getPlatformPath = response => {
-    return Platform.select({
-      android: {value: response.assets[0].uri},
-      ios: {value: response.assets[0].uri},
-    });
-  };
-
-    /**
-   * Get the file name and handle the invalid null case
-   */
-    const getFileName = (name, path) => {
-      console.log(name + path + 'hhhhhh');
-      if (name != null) {
-        return name;
-      }
-  
-      // if (Platform.OS === "ios") {
-      //     path = "~" + path.substring(path.indexOf("/Documents"));
-      // }
-      return path.split('/').pop();
-    };
-
-  const getPlatformURI = imagePath => {
-    let imgSource = imagePath;
-
-    console.log('imagePath', isNaN(imagePath));
-    if (isNaN(imagePath)) {
-      imgSource = {uri: imagePath};
-      if (Platform.OS == 'android') {
-        imgSource.uri = imgSource.uri;
-      }
-    } else {
-      if (image !== '') {
-        imgSource = {uri: image};
-        if (Platform.OS == 'android') {
-          imgSource.uri = imgSource.uri;
-        }
-      } else {
-        imgSource = Images.Profile;
-      }
-    }
-    return imgSource;
-  };
-
-  let imgSource = getPlatformURI(imagePath);
-
-  const chooseLib = () => {
-    var options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true, // do not backup to iCloud
-        path: 'images', // store camera images under Pictures/images for android and Documents/images for iOS
-      },
-    };
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-       
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        let path = getPlatformPath(response).value;
-        let fileName = getFileName(response.fileName, path);
-        setImagePath(path);
-        setImageFileName(fileName);
-        console.log(fileName);
-        // getUrl(path, fileName);
-      }
-    });
-  };
-
-  const chooseCamera = () => {
-    var options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true, // do not backup to iCloud
-        path: 'images', // store camera images under Pictures/images for android and Documents/images for iOS
-      },
-    };
-    launchCamera(options, response => {
-      if (response.didCancel) {
+  const subjectData =[
+    {image: Images.ImageCapture,
+    subjectName:'Math Scanner',
+    subjectSubName:'Image',
+     press: () => props.navigation.navigate('Math_Scanner')
+   },
+   {image: Images.AugmentedReality,
+    subjectName:'AR Math Solver',
+    subjectSubName:'Image',
+    press: () => props.navigation.navigate('AR_Math_Solver')
+   },
+   {image: Images.Chat,
+    subjectName:'Algebraic Assistant ',
+    subjectSubName:'Image',
+    press: () => props.navigation.navigate('Algebraic_Assistant')
+   },
    
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        let path = getPlatformPath(response).value;
-        let fileName = getFileName(response.fileName, path);
-        setImagePath(path);
-        setImageFileName(fileName);
-        // getUrl(path, fileName);
-      }
-    });
+  ]
+
+  const SubjectItem = ({subjects}) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.0}
+        onPress={subjects.item.press}
+        style={styles.subjectItemBtn}>
+        <Image
+          style={styles.subjectItemImgStyle}
+          source={subjects.item.image}
+        />
+        <Text style={styles.subjName}>{subjects.item.subjectName}</Text>
+        {/* <Text style={styles.subjSubName}>{subjects.item.subjectSubName}</Text> */}
+      </TouchableOpacity>
+    );
   };
 
   return (
-    <ScrollView
-      style={{flex: 1, backgroundColor: '#fff'}}
-      showsHorizontalScrollIndicator={false}>
-      <View style={styles.bottomView}>
-        <AppBar
-          navigation={props.navigation}
-          title={'Home'}
-          isShowBack={false}
-        />
-        <View style={{paddingTop: 40, paddingLeft: 40, paddingBottom: 20}}>
-          <View style={{alignItems: 'center', marginTop: 40}}>
-            <TouchableOpacity>
-              <Image style={styles.image} source={imgSource} />
-            </TouchableOpacity>
-
-            <View style={styles.eightyWidthStyle}>
-              <TouchableOpacity
-                onPress={chooseCamera}
-                style={styles.camOrlibStyles}>
-                <Text style={styles.camOrlibTextStyles}> Camera</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={chooseLib}
-                style={styles.camOrlibStyles}>
-                <Text style={styles.camOrlibTextStyles}>Library</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <View>
-          <Text style={{color:'black'}}>Name: </Text>
-        </View>
+    <View style={{flex: 1}}>
+      <AppBar
+        navigation={props.navigation}
+        title={'Home'}
+        isShowBack={false}
+        isShowHamberger={true}
+        isShowProfile={false}
+      />
+      <View style={styles.header}>
+        <Image source={Images.Splash} style={styles.imgStyles} />
       </View>
-    </ScrollView>
+
+      <View>
+        <FlatList
+          data={subjectData}
+          style={{paddingHorizontal: 20, marginTop: -60, marginBottom: 80}}
+          contentContainerStyle={{alignItems: 'center'}}
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          // keyExtractor={item=> item.value}
+          renderItem={item => <SubjectItem subjects={item} />}
+        />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  bottomView: {
-    backgroundColor: 'white',
+  root: {flex: 1, position: 'relative'},
+  header: {
+    width: '100%',
+    height: height / 2.5,
+    padding: 30,
+    backgroundColor: colors.blackColor,
+    position: 'relative',
   },
-  eightyWidthStyle: {
-    flexDirection: 'row',
-    width: '80%',
-    marginBottom: 10,
-    justifyContent: 'center',
+  imgStyles: {
+    position: 'absolute',
+    opacity: 1,
+    top: 60,
+    left: 90,
+    borderRadius: 200,
+    width: 200,
+    height: 200,
   },
-  camOrlibStyles: {
-    height: 30,
-    backgroundColor: colors.secondaryColor2,
+  subjectItemImgStyle: {
+    width: width / 2.2,
+    height: height / 5,
+    borderRadius: 10,
+  },
+  subjectItemBtn: {
+    backgroundColor: colors.blackColor,
     margin: 10,
-    borderRadius: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 2,
+    width: width / 2.2,
+    height: height / 3.5,
+    borderRadius: 10,
+    // padding: 15,
+    shadow: '#9e9808',
+    elevation: 5,
   },
+  subjName:{
+    alignContent:'center',
+    justifyContent:'center',
+    alignItems:'center',
+    alignSelf:'center',
+    paddingTop:20,
+    fontWeight:'bold',
+  }
+  
 });
 
-const mapStateToProps = (state, props) => {
-  return {
-    loginStatus: state.login.loginStatus,
-  };
-};
-
-export default connect(mapStateToProps)(Home);
+export default Home;

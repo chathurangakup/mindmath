@@ -16,7 +16,7 @@ import {
 
 import {colors} from '../../../config/styles';
 import {AppBar} from '../../../components/AppBar';
-import {GET_LOGIN} from './LoginActionTypes';
+import {GET_LOGIN_OK} from './LoginActionTypes';
 import {connect} from 'react-redux';
 
 import Images from '../../../config/Images';
@@ -28,7 +28,10 @@ const {width, height} = Dimensions.get('window');
 
 const Login = props => {
   const [password, setPassword] = useState('');
-  const [userName, setUserName] = useState('');
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [email, setEmail] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isDisableButton, setIsDisableButton] = useState(true);
 
   const setUser = () => {
     setConfig();
@@ -38,18 +41,60 @@ const Login = props => {
     console.log(getConfig());
   };
 
+  const emailValidation = username => {
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(email) === true) {
+      console.log('valid');
+      setIsValidEmail(true);
+    } else {
+      console.log('invalid');
+      setIsValidEmail(false);
+    }
+  };
+
+  const emailValidationTextChange = email => {
+    setEmail(email);
+  };
+
+
+  const passwordValidation = password => {
+       if(password!=''){
+        setIsValidPassword(true)
+       }else{
+        setIsValidPassword(false)
+       }
+  };
+
+  const passwordValidationTextChange = email => {
+    setPassword(email);
+  };
+
   useEffect(() => {
     console.log('loginStatus');
     if (props.loginStatus != null || props.loginStatus != undefined) {
-      if (props?.loginStatus?.data?.login == true) {
-        props.navigation.navigate('home');
+      if (props?.loginStatus == true) {
+      //  props.navigation.navigate('Home');
       }
     }
   }, [props.loginStatus]);
 
   const clickLogin = () => {
-    props.navigation.navigate('home')
+   props.changeLoginStatus(true);
+    //props.navigation.navigate('Home');
   };
+
+  useEffect(() => {
+   console.log("eail",email)
+   console.log(password)
+   console.log(isValidEmail)
+   console.log(isValidPassword)
+
+     if(email!='' && password!='' && isValidEmail==true && isValidPassword ==true){
+      setIsDisableButton(false)
+     }else{
+      setIsDisableButton(true)
+     }
+  }, [email,password, isValidEmail, isValidPassword]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -78,17 +123,48 @@ const Login = props => {
               paddingTop: 100,
               paddingLeft: 60,
             }}>
-            <Text style={{fontSize: 40, fontWeight: 'bold'}}>Welcome Back</Text>
-            <Text>Login to your account</Text>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: 'bold',
+                color: colors.blackColor,
+              }}>
+              Welcome Back
+            </Text>
+            <Text style={{color: colors.blackColor}}>
+              Login to your account
+            </Text>
             <View style={{paddingTop: 30, paddingBottom: 50}}>
-              <TextInputField placeholder="Email/Username"></TextInputField>
-              <TextInputField placeholder="Password"></TextInputField>
+              <TextInputField
+                placeholder="Email"
+                onChangeText={text => emailValidationTextChange(text)}
+                onSubmitEditing={event =>
+                  emailValidation(event.nativeEvent.text)
+                }></TextInputField>
+              {isValidEmail == false ? (
+                <Text style={{color: colors.red, paddingBottom: 15}}>
+                  {' '}
+                  * Please enter valid Email
+                </Text>
+              ) : null}
+
+              <TextInputField placeholder="Password"  onChangeText={text => passwordValidationTextChange(text)}
+                onSubmitEditing={event =>
+                  passwordValidation(event.nativeEvent.text)
+                } secureTextEntry={true}></TextInputField>
+              {isValidPassword == false ? (
+                <Text style={{color: colors.red, paddingBottom: 15}}>
+                  {' '}
+                  * Please enter  Password
+                </Text>
+              ) : null}
             </View>
             <View style={{width: 280}}>
               <Button
-                buttonStyle={{color: colors.primaryColor1}}
+                buttonStyle={{backgroundColor: isDisableButton ?'#777':colors.primaryColor1}}
                 onPressBtn={() => clickLogin()}
                 addText={'Login'}
+                disabled={isDisableButton}
               />
 
               <View
@@ -96,9 +172,11 @@ const Login = props => {
                   flexDirection: 'row',
                   display: 'flex',
                   justifyContent: 'center',
-                  paddingTop: 20
+                  paddingTop: 20,
                 }}>
-                <Text style={{fontSize: 16}}>Dont have an account </Text>
+                <Text style={{fontSize: 16, color: colors.blackColor}}>
+                  Dont have an account{' '}
+                </Text>
                 <TouchableOpacity
                   onPress={() => {
                     props.navigation.navigate('register');
@@ -167,8 +245,8 @@ const mapStateToProps = (state, props) => {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getLoginStatus: loginBody => {
-      dispatch({type: GET_LOGIN, payload: loginBody});
+    changeLoginStatus: loginBody => {
+      dispatch({type: GET_LOGIN_OK, payload: true});
     },
   };
 }

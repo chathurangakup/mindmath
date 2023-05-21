@@ -1,6 +1,6 @@
 import { GET_LOGIN_OK} from './LoginActionTypes';
 const initialState = {
-    loginStatus: undefined,
+    loginStatus: false,
   };
   
   export default (state = initialState, action) => {

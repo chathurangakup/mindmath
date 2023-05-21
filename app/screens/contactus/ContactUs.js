@@ -7,61 +7,48 @@ import {
   Dimensions,
   StyleSheet,
   SafeAreaView,
-  ImageBackground,
-  Image,
+
   TouchableOpacity
 } from 'react-native';
 
 // import {TextInput, HelperText} from 'react-native-paper';
 
-import {colors} from '../../../config/styles';
-import {GET_REGISTER} from './RegisterActionTypes';
-import {connect} from 'react-redux';
+import {colors} from '../../config/styles';
 
-import Images from '../../../config/Images';
-import TextInputField from '../../../components/TextInputField';
-import {Button} from '../../../components/Button';
-import Background from '../../../components/Background';
+import Images from '../../config/Images';
+import TextInputField from '../../components/TextInputField';
+import {Button} from '../../components/Button';
+import Background from '../../components/Background';
+import {AppBar} from '../../components/AppBar';
 
-const {width, height} = Dimensions.get('window');
-
-const Login = props => {
-  const [password, setPassword] = useState('');
-  const [userName, setUserName] = useState('');
-
-  const emailValidate = () => {
-    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (reg.test(this.state.email) === true){
-        alert( valid);
-    }
-    else{
-        alert();
-    }
-}
-
-
+const ContactUs = (props) => {
   return (
-
     <SafeAreaView>
    
     <View style={{alignItems: 'center', width: 460}}>
+
+<AppBar
+        navigation={props.navigation}
+        title={''}
+        isShowBack={false}
+        isShowHamberger={true}
+        isShowProfile={false}
+      />
       <Background
         source={Images.BG}
         resizeMode="cover"
         style={styles.mainComp}>
+
         <View style={{justifyContent:'center',alignItems:'center',paddingRight:60, paddingBottom: 20}}>
         <Text
           style={{
             color: 'white',
-            fontSize: 48,
+            fontSize: 38,
             fontWeight: 'bold',
-           
-           
-          
           }}>
-          REGISTER
+          Contact Us
         </Text>
-        <Text style={{color:'white'}}>Create a new account</Text>
+      
         </View>
       
         <ScrollView
@@ -75,50 +62,26 @@ const Login = props => {
           }}>
         
           <View style={{paddingTop: 30, paddingBottom: 50}}>
-            <TextInputField placeholder="First Name" ></TextInputField>
+            <TextInputField placeholder="First Name"></TextInputField>
             <TextInputField placeholder="Last Name"></TextInputField>
             <TextInputField placeholder="Email/Username"></TextInputField>
             <TextInputField placeholder="Contact Number"></TextInputField>
-            <TextInputField placeholder="Password"></TextInputField>
-            <TextInputField placeholder="Confirm Password"></TextInputField>
+           
           </View>
           <View style={{width: 280}}>
             <Button
               buttonStyle={{color: colors.primaryColor1}}
               onPressBtn={() => clickLogin()}
-              addText={'Sign Up'}
+              addText={'Submit'}
             />
-
-            <View
-              style={{
-                flexDirection: 'row',
-                display: 'flex',
-                justifyContent: 'center',
-                paddingTop: 20
-              }}>
-              <Text style={{fontSize: 16,color:colors.blackColor}}>Already have an account </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate('login');
-                }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: colors.blackColor,
-                  }}>
-                 Login
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
 
       </Background>
     </View>
   </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   bottomView: {
@@ -158,16 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state, props) => {
-  return {
-   
-  };
-};
-
-function mapDispatchToProps(dispatch) {
-  return {
-    
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default ContactUs

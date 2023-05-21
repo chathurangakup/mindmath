@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Platform, Text} from 'react-native';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 
 
-import {Onboarding, MainStack} from '../routes/NavigationStack';
+import {Onboarding,MainStack} from '../routes/NavigationStack';
 
 // import {LoadingSpinner} from '../components/LoadingSpinner';
 
@@ -44,7 +44,8 @@ const Root = props => {
       <View style={{flex: 1}}>
         {/* <SplashScreen /> */}
         {/* <LoadingSpinner showLoading={props.loading} /> */}
-        <Onboarding />
+        {props.isLoggedIn==true?<MainStack/>:<Onboarding/>}
+      
       </View>
     );
   } else {
@@ -52,11 +53,10 @@ const Root = props => {
   }
 };
 
-// const mapStateToProps = state => {
-//   return {
-//     loading: state.common.loading,
-//     isLoggedIn: state.common.isLoggedIn,
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.login.loginStatus,
+  };
+};
 
-export default Root;
+export default connect(mapStateToProps)(Root);

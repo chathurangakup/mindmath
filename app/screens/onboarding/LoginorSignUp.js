@@ -30,6 +30,9 @@ const LoginorSignup = props => {
   const clickLogin = () =>{
     props.navigation.navigate('login')
   }
+  const clickSignup= () =>{
+    props.navigation.navigate('register')
+  }
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -57,7 +60,7 @@ const LoginorSignup = props => {
               borderColor: colors.primaryColor1,
               borderWidth: 2,
             }}
-            onPressBtn={() => clickLogin()}
+            onPressBtn={() => clickSignup()}
             addText={'SignUp'}
           />
         </View>
